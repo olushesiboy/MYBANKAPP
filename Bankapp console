@@ -1,0 +1,96 @@
+using System;
+using System.Collections.Generic;
+
+namespace BankAccountApp
+{
+    class BankAccount
+    {
+        public int AccountNumber { get; }
+        public double Balance { get; private set; }
+
+        public BankAccount()
+        {
+            AccountNumber = GenerateAccountNumber();
+            Balance = 0;
+        }
+
+        private int GenerateAccountNumber()
+        {
+            Random random = new Random();
+            return random.Next(1000000000, 2000000000);
+        }
+
+        public void CheckBalance()
+        {
+            Console.WriteLine($"Account Number: {AccountNumber}");
+            Console.WriteLine($"Current Balance: {Balance:C}");
+        }
+
+        public void FundAccount(double amount)
+        {
+            Balance += amount;
+            Console.WriteLine($"{amount:C} has been credited to your account.");
+        }
+
+        public void Transfer(double amount, BankAccount recipient)
+        {
+            if (Balance >= amount)
+            {
+                Balance -= amount;
+                recipient.Balance += amount;
+                Console.WriteLine($"{amount:C} has been transferred to Account Number: {recipient.AccountNumber}");
+            }
+            else
+            {
+                Console.WriteLine("Insufficient funds to make the transfer.");
+            }
+        }
+
+        public void Withdraw(double amount)
+        {
+            if (Balance >= amount)
+            {
+                Balance -= amount;
+                Console.WriteLine($"{amount:C} has been withdrawn from your account.");
+            }
+            else
+            {
+                Console.WriteLine("Insufficient funds to make the withdrawal.");
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            BankAccount account1 = new BankAccount();
+            BankAccount account2 = new BankAccount();
+
+            account1.FundAccount(500);
+            account2.FundAccount(1000);
+
+            Console.WriteLine("Account 1:");
+            account1.CheckBalance();
+            Console.WriteLine();
+
+            Console.WriteLine("Account 2:");
+            account2.CheckBalance();
+            Console.WriteLine();
+
+            Console.WriteLine("Transferring 200 from Account 2 to Account 1:");
+            account2.Transfer(200, account1);
+            Console.WriteLine();
+
+            Console.WriteLine("Account 1 after transfer:");
+            account1.CheckBalance();
+            Console.WriteLine();
+
+            Console.WriteLine("Account 2 after transfer:");
+            account2.CheckBalance();
+            Console.WriteLine();
+
+            Console.ReadLine();
+        }
+    }
+}
